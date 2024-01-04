@@ -19,24 +19,12 @@ if (USE_LED):
 # Initialise Keyboard 
 keyboard = Keyboard(usb_hid.devices)
 keyboard_layout = KeyboardLayoutUS(keyboard) 
-
-# Convert character to it's USB usage ID equivalent
-# https://docs.circuitpython.org/projects/hid/en/latest/_modules/adafruit_hid/keycode.html
-def char_to_keycode(c):
-    c_num = ord(c)
-
-    if (c >= 'a' and c <= 'z'):
-        return c_num - ord('a') + 4
-    if (c == '0'):
-        return 0x27
-    if (c >= '1' and c <= '9'):
-        return c_num - ord('1') + 0x1E
-    return False
  
 while True:
     if supervisor.runtime.serial_bytes_available:
+        # https://docs.circuitpython.org/projects/hid/en/latest/_modules/adafruit_hid/keycode.html
         val = input()[0]
-        c = char_to_keycode(val)
+        c = getattr(Keycode, val.upper())
 
         if val == '' or not c:
             print("ERROR! This character isn't supported yet")
